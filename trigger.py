@@ -13,21 +13,23 @@ logger = logging.getLogger(__name__)
 
 TRIGGER_URL = os.environ["TRIGGER_URL"]
 TRIGGER_TOKEN = os.environ["TRIGGER_TOKEN"]
-INTERVAL_SECONDS = 5 * 3600 + 50 * 60
 KST = timezone(timedelta(hours=9))
-USE_KST_ANCHOR = os.environ.get("USE_KST_ANCHOR", "false").lower() == "true"
+SCHEDULED_TIMES = (
+    (7, 5),
+    (12, 5),
+    (17, 5),
+    (22, 3),
+)
 
 
-def next_fire_time_anchored() -> datetime:
-    current = datetime.now(KST)
-    anchor = current.replace(hour=10, minute=0, second=0, microsecond=0)
+def next_fire_time(current: datetime) -> datetime:
+    for hour, minute in SCHEDULED_TIMES:
+        candidate = current.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if current < candidate:
+            return candidate
 
-    if current < anchor:
-        return anchor
-
-    elapsed = (current - anchor).total_seconds()
-    periods_passed = int(elapsed // INTERVAL_SECONDS) + 1
-    return anchor + timedelta(seconds=INTERVAL_SECONDS * periods_passed)
+    next_day = current + timedelta(days=1)
+    return next_day.replace(hour=SCHEDULED_TIMES[0][0], minute=SCHEDULED_TIMES[0][1], second=0, microsecond=0)
 
 
 def fire():
@@ -48,12 +50,8 @@ def fire():
 
 
 if __name__ == "__main__":
-    if USE_KST_ANCHOR:
-        target = next_fire_time_anchored()
-        logger.info("KST anchor mode: first trigger at %s KST", target.strftime("%Y-%m-%d %H:%M:%S"))
-    else:
-        target = datetime.now(KST) + timedelta(seconds=INTERVAL_SECONDS)
-        logger.info("Immediate mode: first trigger at %s KST", target.strftime("%Y-%m-%d %H:%M:%S"))
+    target = next_fire_time(datetime.now(KST))
+    logger.info("Fixed KST schedule mode: first trigger at %s KST", target.strftime("%Y-%m-%d %H:%M:%S"))
 
     while True:
         now = datetime.now(KST)
@@ -63,5 +61,5 @@ if __name__ == "__main__":
             time.sleep(int(wait))
 
         fire()
-        target = target + timedelta(seconds=INTERVAL_SECONDS)
+        target = next_fire_time(datetime.now(KST))
         logger.info("Next trigger at %s KST", target.strftime("%Y-%m-%d %H:%M:%S"))
