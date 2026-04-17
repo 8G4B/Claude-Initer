@@ -1,0 +1,26 @@
+name: Deploy Trigger Script
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH Remote Deploy
+        uses: 8G4B/GSM-SV-Deploy@v1.2.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          user: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          target_path: ~/claude-initer
+        env:
+          TRIGGER_URL: ${{ secrets.TRIGGER_URL }}
+          TRIGGER_TOKEN: ${{ secrets.TRIGGER_TOKEN }}
+          USE_KST_ANCHOR: ${{ vars.USE_KST_ANCHOR || 'false' }}
