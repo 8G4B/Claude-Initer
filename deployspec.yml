@@ -1,0 +1,12 @@
+version: 1.0
+
+hooks:
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 30
+      runas: root
+
+  AfterInstall:
+    - location: scripts/start.sh
+      timeout: 120
+      runas: root
