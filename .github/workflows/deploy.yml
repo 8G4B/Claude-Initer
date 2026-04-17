@@ -23,4 +23,3 @@ jobs:
         env:
           TRIGGER_URL: ${{ secrets.TRIGGER_URL }}
           TRIGGER_TOKEN: ${{ secrets.TRIGGER_TOKEN }}
-          USE_KST_ANCHOR: ${{ vars.USE_KST_ANCHOR || 'false' }}
