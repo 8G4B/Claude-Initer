@@ -13,6 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create env file
+        run: |
+          printf 'TRIGGER_URL=%s\nTRIGGER_TOKEN=%s\n' \
+            '${{ secrets.TRIGGER_URL }}' \
+            '${{ secrets.TRIGGER_TOKEN }}' \
+            > .env
+
       - name: Deploy via SSH Remote Deploy
         uses: 8G4B/GSM-SV-Deploy@v1.2.1
         with:
@@ -20,6 +27,3 @@ jobs:
           user: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           target_path: ~/claude-initer
-        env:
-          TRIGGER_URL: ${{ secrets.TRIGGER_URL }}
-          TRIGGER_TOKEN: ${{ secrets.TRIGGER_TOKEN }}

@@ -7,6 +7,5 @@ docker build -t claude-trigger .
 docker run -d \
   --name claude-trigger \
   --restart unless-stopped \
-  -e TRIGGER_URL="${TRIGGER_URL}" \
-  -e TRIGGER_TOKEN="${TRIGGER_TOKEN}" \
+  --env-file "$(dirname "$0")/../.env" \
   claude-trigger
