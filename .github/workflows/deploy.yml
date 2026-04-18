@@ -18,7 +18,7 @@ jobs:
           printf 'TRIGGER_URL=%s\nTRIGGER_TOKEN=%s\n' \
             '${{ secrets.TRIGGER_URL }}' \
             '${{ secrets.TRIGGER_TOKEN }}' \
-            > .env
+            > trigger.env
 
       - name: Deploy via SSH Remote Deploy
         uses: 8G4B/GSM-SV-Deploy@v1.2.1
