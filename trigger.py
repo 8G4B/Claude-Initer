@@ -58,7 +58,7 @@ if __name__ == "__main__":
         wait = (target - now).total_seconds()
         if wait > 0:
             logger.info("Sleeping %.1fs until %s KST", wait, target.strftime("%H:%M:%S"))
-            time.sleep(int(wait))
+            time.sleep(max(1, wait))
 
         fire()
         target = next_fire_time(datetime.now(KST))
