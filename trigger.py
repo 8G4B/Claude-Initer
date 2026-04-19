@@ -23,13 +23,16 @@ SCHEDULED_TIMES = (
 
 
 def next_fire_time(current: datetime) -> datetime:
-    for hour, minute in SCHEDULED_TIMES:
-        candidate = current.replace(hour=hour, minute=minute, second=0, microsecond=0)
-        if current < candidate:
-            return candidate
+    candidate_day = current
+    for _ in range(8):
+        if candidate_day.weekday() != 5:
+            for hour, minute in SCHEDULED_TIMES:
+                candidate = candidate_day.replace(hour=hour, minute=minute, second=0, microsecond=0)
+                if current < candidate:
+                    return candidate
+        candidate_day = (candidate_day + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
 
-    next_day = current + timedelta(days=1)
-    return next_day.replace(hour=SCHEDULED_TIMES[0][0], minute=SCHEDULED_TIMES[0][1], second=0, microsecond=0)
+    raise RuntimeError("Could not find a valid fire time")
 
 
 def fire():
