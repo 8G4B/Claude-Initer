@@ -15,10 +15,10 @@ TRIGGER_URL = os.environ["TRIGGER_URL"]
 TRIGGER_TOKEN = os.environ["TRIGGER_TOKEN"]
 KST = timezone(timedelta(hours=9))
 SCHEDULED_TIMES = (
-    (7, 5),
-    (12, 5),
-    (17, 5),
-    (22, 3),
+    (6, 5),
+    (11, 5),
+    (16, 5),
+    (21, 3),
 )
 
 
