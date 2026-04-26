@@ -26,4 +26,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          target_path: ~/claude-initer
+          target_path: ~/Claude-Initer
